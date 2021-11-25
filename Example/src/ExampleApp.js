@@ -7,22 +7,22 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import SignatureView from './SignatureView';
+import {SignatureDialog} from './SignatureView';
 
-const ExampleApp: () => React$Node = () => {
+const ExampleApp = () => {
+  const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(null);
-  const signatureView = useRef(null);
 
-  const onSave = function (result) {
+  const onSave = result => {
     setData(`data:image/png;base64,${result.encoded}`);
-    signatureView.current.show(false);
+    setOpen(false);
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
-          signatureView.current.show(true);
+          setOpen(true);
         }}>
         <View>
           <Text style={styles.titleText}>
@@ -36,10 +36,10 @@ const ExampleApp: () => React$Node = () => {
           )}
         </View>
       </TouchableOpacity>
-      <SignatureView
-        ref={signatureView}
-        rotateClockwise={true}
+      <SignatureDialog
+        open={isOpen}
         onSave={onSave}
+        onClose={() => setOpen(false)}
       />
     </View>
   );

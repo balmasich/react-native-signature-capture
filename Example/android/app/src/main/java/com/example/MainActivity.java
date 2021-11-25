@@ -1,4 +1,4 @@
-package com.signaturecaptureexample;
+package com.example;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "SignatureCaptureExample";
+    return "example";
   }
 }
