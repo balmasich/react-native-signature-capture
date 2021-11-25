@@ -151,11 +151,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
 		tap.cancelsTouchesInView = YES;
 		[self addGestureRecognizer:tap];
-
-		// Erase with long press
-		UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-		longer.cancelsTouchesInView = YES;
-		[self addGestureRecognizer:longer];
 	}
 	else
 		[NSException raise:@"NSOpenGLES2ContextException" format:@"Failed to create OpenGL ES2 context"];
@@ -296,6 +291,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	if (!self.hasSignature)
 		return nil;
 
+    [self addFinalText];
 	UIImage *signatureImg;
 	UIImage *snapshot = [self snapshot];
 	[self erase];
@@ -378,11 +374,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	}
 
 	[self setNeedsDisplay];
-}
-
-
-- (void)longPress:(UILongPressGestureRecognizer *)lp {
-	[self erase];
 }
 
 - (void)pan:(UIPanGestureRecognizer *)p {
@@ -582,6 +573,37 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 
 		toTravel *= -1;
 	}
+}
+
+- (void)addFinalText
+{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
+    [label setText:@"Hello World"];
+    label.textAlignment = NSTextAlignmentCenter;
+    [label setBackgroundColor:RGB(255, 0, 0)];
+
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef labelContext = CGBitmapContextCreate(NULL, label.bounds.size.width, label.bounds.size.height, 8, 4 * label.bounds.size.width, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+
+    CGColorSpaceRelease(colorSpace);
+
+    // setup texture handle for view to be rendered to texture
+    GLuint labelTextureHandle;
+    glGenTextures(1, &labelTextureHandle);
+    glBindTexture(GL_TEXTURE_2D, labelTextureHandle);
+
+    // these must be defined for non mipmapped nPOT textures (double check)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, label.bounds.size.width, label.bounds.size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+    // Render
+    GLubyte *labelPixelData = (GLubyte*)CGBitmapContextGetData(labelContext);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, label.bounds.size.width, label.bounds.size.height, GL_RGBA, GL_UNSIGNED_BYTE, labelPixelData);
 }
 
 
