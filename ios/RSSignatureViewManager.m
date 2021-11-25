@@ -17,6 +17,8 @@ RCT_EXPORT_VIEW_PROPERTY(showNativeButtons, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showTitleLabel, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(backgroundColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(strokeColor, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(minStrokeWidth, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(maxStrokeWidth, NSNumber)
 
 
 -(dispatch_queue_t) methodQueue

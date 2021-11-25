@@ -2,8 +2,6 @@
 #import <OpenGLES/ES2/glext.h>
 #import "RSSignatureViewManager.h"
 
-#define             STROKE_WIDTH_MIN 0.004 // Stroke width determined by touch velocity
-#define             STROKE_WIDTH_MAX 0.010
 #define       STROKE_WIDTH_SMOOTHING 0.5   // Low pass filter alpha
 
 #define           VELOCITY_CLAMP_MIN 20
@@ -111,6 +109,8 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	PPSSignaturePoint currentVelocity;
 	UIColor* backgroundColor;
 	UIColor* strokeColor;
+	NSNumber* minStrokeWidth;
+	NSNumber* maxStrokeWidth;
 }
 
 @end
@@ -129,6 +129,8 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		self.backgroundColor = [UIColor whiteColor];
 		self.strokeColor = [UIColor blackColor];
 		self.opaque = NO;
+		self.minStrokeWidth = [NSNumber numberWithFloat:0.004];
+		self.maxStrokeWidth = [NSNumber numberWithFloat:0.01];
 
 		self.context = context;
 		self.drawableDepthFormat = GLKViewDrawableDepthFormat24;
@@ -401,7 +403,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	float normalizedVelocity = (clampedVelocityMagnitude - VELOCITY_CLAMP_MIN) / (VELOCITY_CLAMP_MAX - VELOCITY_CLAMP_MIN);
 
 	float lowPassFilterAlpha = STROKE_WIDTH_SMOOTHING;
-	float newThickness = (STROKE_WIDTH_MAX - STROKE_WIDTH_MIN) * (1 - normalizedVelocity) + STROKE_WIDTH_MIN;
+	float newThickness = ([self.maxStrokeWidth floatValue] - [self.minStrokeWidth floatValue]) * (1 - normalizedVelocity) + [self.minStrokeWidth floatValue];
 	penThickness = penThickness * lowPassFilterAlpha + newThickness * (1 - lowPassFilterAlpha);
 
 	if ([p state] == UIGestureRecognizerStateBegan) {

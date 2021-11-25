@@ -21,6 +21,8 @@
 	BOOL _showTitleLabel;
 	UIColor *_backgroundColor;
 	UIColor *_strokeColor;
+	NSNumber *_minStrokeWidth;
+	NSNumber *_maxStrokeWidth;
 }
 
 @synthesize sign;
@@ -71,6 +73,8 @@
 		sign.manager = manager;
 		sign.backgroundColor = _backgroundColor;
 		sign.strokeColor = _strokeColor;
+		sign.minStrokeWidth = _minStrokeWidth;
+		sign.maxStrokeWidth = _maxStrokeWidth;
 
 		[self addSubview:sign];
 
@@ -191,6 +195,14 @@
 
 - (void)setStrokeColor:(UIColor*)strokeColor {
 	_strokeColor = strokeColor;
+}
+
+- (void)setMinStrokeWidth:(NSNumber*)minStrokeWidth {
+	_minStrokeWidth = minStrokeWidth;
+}
+
+- (void)setMaxStrokeWidth:(NSNumber*)maxStrokeWidth {
+	_maxStrokeWidth = maxStrokeWidth;
 }
 
 -(void) onSaveButtonPressed {
