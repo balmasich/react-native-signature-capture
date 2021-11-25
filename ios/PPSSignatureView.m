@@ -130,7 +130,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		self.strokeColor = [UIColor blackColor];
 		self.opaque = NO;
 		self.minStrokeWidth = [NSNumber numberWithFloat:0.004];
-		self.maxStrokeWidth = [NSNumber numberWithFloat:0.01];
+		self.maxStrokeWidth = [NSNumber numberWithFloat:0.03];
 
 		self.context = context;
 		self.drawableDepthFormat = GLKViewDrawableDepthFormat24;
