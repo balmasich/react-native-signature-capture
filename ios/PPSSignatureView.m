@@ -580,7 +580,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     [label setText:@"Hello World"];
     label.textAlignment = NSTextAlignmentCenter;
-    [label setBackgroundColor:RGB(255, 0, 0)];
+    [label setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:1]];
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef labelContext = CGBitmapContextCreate(NULL, label.bounds.size.width, label.bounds.size.height, 8, 4 * label.bounds.size.width, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
