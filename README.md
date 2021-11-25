@@ -1,5 +1,6 @@
 This is a fork of https://www.npmjs.com/package/react-native-signature-capture
 You can now use `minStrokeWidth` & `maxStrokeWidth` on both iOS & Android.
+Also onDragEvent is send at the end of dragging on iOS (like it does on Android)
 The repo contain an up-to-date typescript definition. 
 
 # Install
