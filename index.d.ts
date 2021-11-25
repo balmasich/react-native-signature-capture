@@ -57,14 +57,14 @@ export interface SignatureCaptureProps extends ViewProps {
     /**
      * sets the min stroke size
      *
-     * @default 500
+     * @default 8 (android) ; 0.004 (iOS)
      */
     minStrokeWidth?: number | undefined;
 
     /**
      * sets the max stroke size
      *
-     * @default 500
+     * @default 16 (android) ; 0.03 (iOS)
      */
     maxStrokeWidth?: number | undefined;
 
