@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {View, Text, Modal, Platform, Button} from 'react-native';
-import SignatureCapture from '@lagregance/react-native-signature-capture';
+import SignatureCapture from './SignatureCapture';
 
 const toolbarHeight = Platform.select({
   android: 0,
@@ -40,6 +40,8 @@ export const SignatureDialog = props => {
           onDragEvent={e => console.log('Drag event', e)}
           minStrokeWidth={Platform.OS === 'android' ? 2 : 0.004}
           maxStrokeWidth={Platform.OS === 'android' ? 4 : 0.01}
+          enableDate={true}
+          disableLongPressErase={true}
         />
         <Button title="Save" onPress={() => signRef.current.saveImage()} />
       </View>

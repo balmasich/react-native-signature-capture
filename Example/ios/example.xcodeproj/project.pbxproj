@@ -14,6 +14,9 @@
 		69FF8FBE7F90BB0872EC3F6F /* libPods-example-exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 306457B13DFC368913A1CF6F /* libPods-example-exampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D4B34CCF6F39D030B9F686E9 /* libPods-example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82752CBE62610AA994B73A73 /* libPods-example.a */; };
+		E0BF35992750F89100127640 /* PPSSignatureView.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BF35932750F89100127640 /* PPSSignatureView.m */; };
+		E0BF359A2750F89100127640 /* RSSignatureView.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BF35942750F89100127640 /* RSSignatureView.m */; };
+		E0BF359B2750F89100127640 /* RSSignatureViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E0BF35982750F89100127640 /* RSSignatureViewManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +45,12 @@
 		C39FECFD78CF22A535C0E3A0 /* Pods-example-exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-exampleTests.debug.xcconfig"; path = "Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDAD224D1430D891C11EA8E0 /* Pods-example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example.release.xcconfig"; path = "Target Support Files/Pods-example/Pods-example.release.xcconfig"; sourceTree = "<group>"; };
 		D90F266B7DE1A3D464569A67 /* Pods-example-exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-exampleTests.release.xcconfig"; path = "Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		E0BF35932750F89100127640 /* PPSSignatureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PPSSignatureView.m; path = ../../../ios/PPSSignatureView.m; sourceTree = "<group>"; };
+		E0BF35942750F89100127640 /* RSSignatureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSSignatureView.m; path = ../../../ios/RSSignatureView.m; sourceTree = "<group>"; };
+		E0BF35952750F89100127640 /* PPSSignatureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPSSignatureView.h; path = ../../../ios/PPSSignatureView.h; sourceTree = "<group>"; };
+		E0BF35962750F89100127640 /* RSSignatureViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSSignatureViewManager.h; path = ../../../ios/RSSignatureViewManager.h; sourceTree = "<group>"; };
+		E0BF35972750F89100127640 /* RSSignatureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSSignatureView.h; path = ../../../ios/RSSignatureView.h; sourceTree = "<group>"; };
+		E0BF35982750F89100127640 /* RSSignatureViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSSignatureViewManager.m; path = ../../../ios/RSSignatureViewManager.m; sourceTree = "<group>"; };
 		E55A7B9FD8D7ADC92D369BF6 /* Pods-example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example.debug.xcconfig"; path = "Target Support Files/Pods-example/Pods-example.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -86,6 +95,7 @@
 		13B07FAE1A68108700A75B9A /* example */ = {
 			isa = PBXGroup;
 			children = (
+				E0BF35922750F85E00127640 /* lib */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -146,6 +156,19 @@
 				00E356EE1AD99517003FC87E /* exampleTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E0BF35922750F85E00127640 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E0BF35952750F89100127640 /* PPSSignatureView.h */,
+				E0BF35932750F89100127640 /* PPSSignatureView.m */,
+				E0BF35972750F89100127640 /* RSSignatureView.h */,
+				E0BF35942750F89100127640 /* RSSignatureView.m */,
+				E0BF35962750F89100127640 /* RSSignatureViewManager.h */,
+				E0BF35982750F89100127640 /* RSSignatureViewManager.m */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -411,6 +434,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E0BF35992750F89100127640 /* PPSSignatureView.m in Sources */,
+				E0BF359A2750F89100127640 /* RSSignatureView.m in Sources */,
+				E0BF359B2750F89100127640 /* RSSignatureViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

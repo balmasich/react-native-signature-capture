@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@lagregance/react-native-signature-capture": "file:..",
     "react": "17.0.2",
     "react-native": "0.66.3"
   },

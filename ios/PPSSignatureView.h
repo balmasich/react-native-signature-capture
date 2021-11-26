@@ -9,6 +9,8 @@
 @property (assign, nonatomic) NSNumber *minStrokeWidth;
 @property (assign, nonatomic) NSNumber *maxStrokeWidth;
 @property (assign, nonatomic) BOOL hasSignature;
+@property (assign, nonatomic )BOOL disableLongPressErase;
+@property (assign, nonatomic) BOOL enableDate;
 @property (strong, nonatomic) UIImage *signatureImage;
 @property (nonatomic, strong) RSSignatureViewManager *manager;
 

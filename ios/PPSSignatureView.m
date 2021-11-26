@@ -152,10 +152,10 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		tap.cancelsTouchesInView = YES;
 		[self addGestureRecognizer:tap];
 
-		// Erase with long press
-        UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-        longer.cancelsTouchesInView = YES;
-        [self addGestureRecognizer:longer];
+    // Erase with long press
+    UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    longer.cancelsTouchesInView = YES;
+    [self addGestureRecognizer:longer];
 	}
 	else
 		[NSException raise:@"NSOpenGLES2ContextException" format:@"Failed to create OpenGL ES2 context"];
@@ -296,7 +296,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	if (!self.hasSignature)
 		return nil;
 
-    [self addFinalText];
+    // [self addFinalText];
 	UIImage *signatureImg;
 	UIImage *snapshot = [self snapshot];
 	[self erase];
@@ -332,8 +332,11 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 			}
 		}
 	}
-
-	return signatureImg;
+  if (self.enableDate) {
+    return [self imageByCombiningImage:[self getDateImage:signatureImg.size] withImage:signatureImg];
+  } else {
+    return signatureImg;
+  }
 }
 
 
@@ -382,7 +385,9 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)lp {
-	[self erase];
+  if (!self.disableLongPressErase) {
+    [self erase];
+  }
 }
 
 - (void)pan:(UIPanGestureRecognizer *)p {
@@ -540,6 +545,8 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SignatureDotsData), SignatureDotsData, GL_DYNAMIC_DRAW);
 	[self bindShaderAttributes];
 
+	// [self drawText:@"Hello World" AtX:10 Y:20];
+    // [self addFinalText];
 
 	glBindVertexArrayOES(0);
 
@@ -555,8 +562,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	penThickness = 0.003;
 	previousPoint = CGPointMake(-100, -100);
 }
-
-
 
 - (void)addTriangleStripPointsForPrevious:(PPSSignaturePoint)previous next:(PPSSignaturePoint)next {
 	float toTravel = penThickness / 2.0;
@@ -584,35 +589,35 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	}
 }
 
-- (void)addFinalText
+- (UIImage*)getDateImage:(CGSize)size
 {
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
-    [label setText:@"Hello World"];
-    label.textAlignment = NSTextAlignmentCenter;
-    [label setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:1]];
+    CGFloat fontSize = 26;
+    CGFloat theta = -0.44f; // 35 deg
+  
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSDate *date = [NSDate date];
+     
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"fr_FR"];
+    [dateFormatter setLocalizedDateFormatFromTemplate:@"dd/MM/yyyy HH:mm"];
+  
+    UILabel *myLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    myLabel.text = [dateFormatter stringFromDate:date];
+    myLabel.font = [UIFont fontWithName:@"Helvetica" size:fontSize];
+    myLabel.textColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.4];
+    myLabel.backgroundColor = [UIColor clearColor];
+    myLabel.textAlignment = NSTextAlignmentCenter;
 
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef labelContext = CGBitmapContextCreate(NULL, label.bounds.size.width, label.bounds.size.height, 8, 4 * label.bounds.size.width, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    UIGraphicsBeginImageContext(myLabel.bounds.size);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGPoint center = CGPointMake(size.width / 2.0f, size.height / 2.0f);
+    CGContextTranslateCTM(c,center.x,center.y);
+    CGContextRotateCTM(c,theta);
+    CGContextTranslateCTM(c,-center.x,-center.y);
 
-    CGColorSpaceRelease(colorSpace);
-
-    // setup texture handle for view to be rendered to texture
-    GLuint labelTextureHandle;
-    glGenTextures(1, &labelTextureHandle);
-    glBindTexture(GL_TEXTURE_2D, labelTextureHandle);
-
-    // these must be defined for non mipmapped nPOT textures (double check)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, label.bounds.size.width, label.bounds.size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-    // Render
-    GLubyte *labelPixelData = (GLubyte*)CGBitmapContextGetData(labelContext);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, label.bounds.size.width, label.bounds.size.height, GL_RGBA, GL_UNSIGNED_BYTE, labelPixelData);
+    [myLabel.layer renderInContext:c];
+    UIImage *layerImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return layerImage;
 }
 
 
