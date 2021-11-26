@@ -91,10 +91,10 @@ public class RSSignatureCaptureView extends View {
 	}
 
 	/**
-	 * Get signature
-	 *
-	 * @return
-	 */
+	* Get signature
+	*
+	* @return
+	*/
 	public Bitmap getSignature() {
 
 		Bitmap signatureBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
@@ -124,8 +124,8 @@ public class RSSignatureCaptureView extends View {
 
 
 	/**
-	 * clear signature canvas
-	 */
+	* clear signature canvas
+	*/
 	public void clearSignature() {
 		clear();
 	}
@@ -259,7 +259,7 @@ public class RSSignatureCaptureView extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (!isEnabled() || event.getPointerCount() > 1 || (multipleTouchDragged && event.getAction() != MotionEvent.ACTION_UP)) {
-			multipleTouchDragged = true;
+		    multipleTouchDragged = true;
 			return false;
 		}
 
@@ -268,32 +268,32 @@ public class RSSignatureCaptureView extends View {
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				mLastTouchX = eventX;
-				mLastTouchY = eventY;
+                mLastTouchX = eventX;
+                mLastTouchY = eventY;
 				getParent().requestDisallowInterceptTouchEvent(true);
 				mPoints.clear();
 				mPath.moveTo(eventX, eventY);
 				addPoint(new TimedPoint(eventX, eventY));
 
 			case MotionEvent.ACTION_MOVE:
-				if((Math.abs(mLastTouchX - eventX) < SCROLL_THRESHOLD || Math.abs(mLastTouchY - eventY) < SCROLL_THRESHOLD) && dragged) {
-					return false;
-				}
+                if((Math.abs(mLastTouchX - eventX) < SCROLL_THRESHOLD || Math.abs(mLastTouchY - eventY) < SCROLL_THRESHOLD) && dragged) {
+                    return false;
+                }
 				resetDirtyRect(eventX, eventY);
 				addPoint(new TimedPoint(eventX, eventY));
-				dragged = true;
+                dragged = true;
 				break;
 
 			case MotionEvent.ACTION_UP:
-				if(mPoints.size() >= 3) {
-					resetDirtyRect(eventX, eventY);
-					addPoint(new TimedPoint(eventX, eventY));
-					getParent().requestDisallowInterceptTouchEvent(true);
-					setIsEmpty(false);
-					sendDragEventToReact();
-				}
-				dragged = false;
-				multipleTouchDragged = false;
+			    if(mPoints.size() >= 3) {
+                    resetDirtyRect(eventX, eventY);
+                    addPoint(new TimedPoint(eventX, eventY));
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                    setIsEmpty(false);
+                    sendDragEventToReact();
+			    }
+                dragged = false;
+                multipleTouchDragged = false;
 				break;
 
 			default:

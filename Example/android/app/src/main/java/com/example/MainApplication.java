@@ -1,4 +1,4 @@
-package com.signaturecaptureexample;
+package com.example;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,6 +8,8 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.rssignaturecapture.RSSignatureCapturePackage;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
+          packages.add(new RSSignatureCapturePackage());
           return packages;
         }
 
@@ -62,7 +64,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.signaturecaptureexample.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.example.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

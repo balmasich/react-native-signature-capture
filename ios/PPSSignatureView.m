@@ -151,11 +151,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
 		tap.cancelsTouchesInView = YES;
 		[self addGestureRecognizer:tap];
-
-		// Erase with long press
-		UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-		longer.cancelsTouchesInView = YES;
-		[self addGestureRecognizer:longer];
 	}
 	else
 		[NSException raise:@"NSOpenGLES2ContextException" format:@"Failed to create OpenGL ES2 context"];
@@ -296,6 +291,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	if (!self.hasSignature)
 		return nil;
 
+    // [self addFinalText];
 	UIImage *signatureImg;
 	UIImage *snapshot = [self snapshot];
 	[self erase];
@@ -331,8 +327,11 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 			}
 		}
 	}
-
-	return signatureImg;
+  if (self.enableDate) {
+    return [self imageByCombiningImage:signatureImg withImage:[self getDateImage:signatureImg.size]];
+  } else {
+    return signatureImg;
+  }
 }
 
 
@@ -378,11 +377,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	}
 
 	[self setNeedsDisplay];
-}
-
-
-- (void)longPress:(UILongPressGestureRecognizer *)lp {
-	[self erase];
 }
 
 - (void)pan:(UIPanGestureRecognizer *)p {
@@ -540,6 +534,8 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SignatureDotsData), SignatureDotsData, GL_DYNAMIC_DRAW);
 	[self bindShaderAttributes];
 
+	// [self drawText:@"Hello World" AtX:10 Y:20];
+    // [self addFinalText];
 
 	glBindVertexArrayOES(0);
 
@@ -555,8 +551,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	penThickness = 0.003;
 	previousPoint = CGPointMake(-100, -100);
 }
-
-
 
 - (void)addTriangleStripPointsForPrevious:(PPSSignaturePoint)previous next:(PPSSignaturePoint)next {
 	float toTravel = penThickness / 2.0;
@@ -582,6 +576,35 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 
 		toTravel *= -1;
 	}
+}
+
+- (UIImage*)getDateImage:(CGSize)size
+{
+    CGFloat fontSize = 26;
+    CGFloat theta = -0.44f; // 25.2 deg
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"dd/MM/yyyy HH:mm";
+    NSDate *date = [NSDate date];
+
+    UILabel *myLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    myLabel.text = [dateFormatter stringFromDate:date];
+    myLabel.font = [UIFont fontWithName:@"Helvetica" size:fontSize];
+    myLabel.textColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
+    myLabel.backgroundColor = [UIColor clearColor];
+    myLabel.textAlignment = NSTextAlignmentCenter;
+
+    UIGraphicsBeginImageContext(myLabel.bounds.size);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGPoint center = CGPointMake(size.width / 2.0f, size.height / 2.0f);
+    CGContextTranslateCTM(c,center.x,center.y);
+    CGContextRotateCTM(c,theta);
+    CGContextTranslateCTM(c,-center.x,-center.y);
+
+    [myLabel.layer renderInContext:c];
+    UIImage *layerImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return layerImage;
 }
 
 

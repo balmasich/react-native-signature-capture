@@ -19,6 +19,7 @@
 	BOOL _showBorder;
 	BOOL _showNativeButtons;
 	BOOL _showTitleLabel;
+  BOOL _enableDate;
 	UIColor *_backgroundColor;
 	UIColor *_strokeColor;
 	NSNumber *_minStrokeWidth;
@@ -75,6 +76,8 @@
 		sign.strokeColor = _strokeColor;
 		sign.minStrokeWidth = _minStrokeWidth;
 		sign.maxStrokeWidth = _maxStrokeWidth;
+    sign.enableDate = _enableDate;
+
 
 		[self addSubview:sign];
 
@@ -205,6 +208,10 @@
 	_maxStrokeWidth = maxStrokeWidth;
 }
 
+- (void)setEnableDate:(BOOL)enableDate {
+  _enableDate = enableDate;
+}
+
 -(void) onSaveButtonPressed {
 	[self saveImage];
 }
@@ -217,31 +224,13 @@
 	saveButton.hidden = NO;
 	clearButton.hidden = NO;
 
-	NSError *error;
-
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths firstObject];
-	NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/signature.png"];
-
-	//remove if file already exists
-	if ([[NSFileManager defaultManager] fileExistsAtPath:tempPath]) {
-		[[NSFileManager defaultManager] removeItemAtPath:tempPath error:&error];
-		if (error) {
-			NSLog(@"Error: %@", error.debugDescription);
-		}
-	}
 
 	// Convert UIImage object into NSData (a wrapper for a stream of bytes) formatted according to PNG spec
 	NSData *imageData = UIImagePNGRepresentation(signImage);
-	BOOL isSuccess = [imageData writeToFile:tempPath atomically:YES];
-	if (isSuccess) {
-		NSFileManager *man = [NSFileManager defaultManager];
-		NSDictionary *attrs = [man attributesOfItemAtPath:tempPath error: NULL];
-		//UInt32 result = [attrs fileSize];
+  NSFileManager *man = [NSFileManager defaultManager];
 
-		NSString *base64Encoded = [imageData base64EncodedStringWithOptions:0];
-		[self.manager publishSaveImageEvent: tempPath withEncoded:base64Encoded];
-	}
+	NSString *base64Encoded = [imageData base64EncodedStringWithOptions:0];
+  [self.manager publishSaveImageEvent:base64Encoded];
 }
 
 -(void) onClearButtonPressed {
