@@ -41,7 +41,6 @@ export const SignatureDialog = props => {
           minStrokeWidth={Platform.OS === 'android' ? 2 : 0.004}
           maxStrokeWidth={Platform.OS === 'android' ? 4 : 0.01}
           enableDate={true}
-          disableLongPressErase={true}
         />
         <Button title="Save" onPress={() => signRef.current.saveImage()} />
       </View>
