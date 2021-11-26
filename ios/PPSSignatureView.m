@@ -151,11 +151,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
 		tap.cancelsTouchesInView = YES;
 		[self addGestureRecognizer:tap];
-
-    // Erase with long press
-    UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-    longer.cancelsTouchesInView = YES;
-    [self addGestureRecognizer:longer];
 	}
 	else
 		[NSException raise:@"NSOpenGLES2ContextException" format:@"Failed to create OpenGL ES2 context"];
@@ -333,7 +328,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		}
 	}
   if (self.enableDate) {
-    return [self imageByCombiningImage:[self getDateImage:signatureImg.size] withImage:signatureImg];
+    return [self imageByCombiningImage:signatureImg withImage:[self getDateImage:signatureImg.size]];
   } else {
     return signatureImg;
   }
@@ -382,12 +377,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	}
 
 	[self setNeedsDisplay];
-}
-
-- (void)longPress:(UILongPressGestureRecognizer *)lp {
-  if (!self.disableLongPressErase) {
-    [self erase];
-  }
 }
 
 - (void)pan:(UIPanGestureRecognizer *)p {
@@ -592,18 +581,16 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 - (UIImage*)getDateImage:(CGSize)size
 {
     CGFloat fontSize = 26;
-    CGFloat theta = -0.44f; // 35 deg
-  
+    CGFloat theta = -0.44f; // 25.2 deg
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"dd/MM/yyyy HH:mm";
     NSDate *date = [NSDate date];
-     
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"fr_FR"];
-    [dateFormatter setLocalizedDateFormatFromTemplate:@"dd/MM/yyyy HH:mm"];
-  
+
     UILabel *myLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
     myLabel.text = [dateFormatter stringFromDate:date];
     myLabel.font = [UIFont fontWithName:@"Helvetica" size:fontSize];
-    myLabel.textColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.4];
+    myLabel.textColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
     myLabel.backgroundColor = [UIColor clearColor];
     myLabel.textAlignment = NSTextAlignmentCenter;
 

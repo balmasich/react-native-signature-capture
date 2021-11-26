@@ -69,11 +69,6 @@ export interface SignatureCaptureProps extends ViewProps {
   maxStrokeWidth?: number | undefined;
 
   /**
-   * Disable clear canvas when long press
-   */
-  disableLongPressErase?: boolean | undefined;
-
-  /**
    * Add current date over the result image
    */
   enableDate?: boolean | undefined;

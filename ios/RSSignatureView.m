@@ -19,7 +19,6 @@
 	BOOL _showBorder;
 	BOOL _showNativeButtons;
 	BOOL _showTitleLabel;
-  BOOL _disableLongPressErase;
   BOOL _enableDate;
 	UIColor *_backgroundColor;
 	UIColor *_strokeColor;
@@ -77,9 +76,8 @@
 		sign.strokeColor = _strokeColor;
 		sign.minStrokeWidth = _minStrokeWidth;
 		sign.maxStrokeWidth = _maxStrokeWidth;
-    sign.disableLongPressErase = _disableLongPressErase;
     sign.enableDate = _enableDate;
-    
+
 
 		[self addSubview:sign];
 
@@ -208,10 +206,6 @@
 
 - (void)setMaxStrokeWidth:(NSNumber*)maxStrokeWidth {
 	_maxStrokeWidth = maxStrokeWidth;
-}
-
-- (void)setDisableLongPressErase:(BOOL)disableLongPressErase {
-  _disableLongPressErase = disableLongPressErase;
 }
 
 - (void)setEnableDate:(BOOL)enableDate {
