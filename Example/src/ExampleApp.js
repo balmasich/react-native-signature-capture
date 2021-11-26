@@ -29,10 +29,14 @@ const ExampleApp = () => {
             {data ? 'Your signature:' : 'Click to sign'}
           </Text>
           {data && (
-            <View style={styles.imageContainer}>
-              <Image style={styles.previewImage} source={{uri: data}} />
-              <Button title="Clear" onPress={() => setData(null)} />
-            </View>
+            <>
+              <View style={styles.imageContainer}>
+                <Image style={styles.previewImage} source={{uri: data}} />
+              </View>
+              <View style={{marginTop: 10}}>
+                <Button title="Clear" onPress={() => setData(null)} />
+              </View>
+            </>
           )}
         </View>
       </TouchableOpacity>
@@ -61,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   previewImage: {
-    width: 300,
+    width: 500,
     height: 300,
     resizeMode: 'contain',
   },
