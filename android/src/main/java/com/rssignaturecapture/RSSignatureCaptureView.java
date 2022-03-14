@@ -372,6 +372,10 @@ public class RSSignatureCaptureView extends View {
 		}
 	}
 
+	public boolean isEmpty() {
+		return mIsEmpty;
+	}
+
 	public void clear() {
 		dragged = false;
 		mPoints = new ArrayList<TimedPoint>();

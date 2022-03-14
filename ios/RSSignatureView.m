@@ -217,20 +217,24 @@
 }
 
 -(void) saveImage {
-	saveButton.hidden = YES;
-	clearButton.hidden = YES;
-	UIImage *signImage = [self.sign signatureImage: _rotateClockwise withSquare:_square];
+    if (self.sign.hasSignature) {
+        saveButton.hidden = YES;
+        clearButton.hidden = YES;
 
-	saveButton.hidden = NO;
-	clearButton.hidden = NO;
+        UIImage *signImage = [self.sign signatureImage: _rotateClockwise withSquare:_square];
 
+        saveButton.hidden = NO;
+        clearButton.hidden = NO;
 
-	// Convert UIImage object into NSData (a wrapper for a stream of bytes) formatted according to PNG spec
-	NSData *imageData = UIImagePNGRepresentation(signImage);
-  NSFileManager *man = [NSFileManager defaultManager];
-
-	NSString *base64Encoded = [imageData base64EncodedStringWithOptions:0];
-  [self.manager publishSaveImageEvent:base64Encoded];
+        // Convert UIImage object into NSData (a wrapper for a stream of bytes) formatted according to PNG spec
+        NSData *imageData = UIImagePNGRepresentation(signImage);
+        NSFileManager *man = [NSFileManager defaultManager];
+        NSString *base64Encoded = [imageData base64EncodedStringWithOptions:0];
+        [self.manager publishSaveImageEvent:base64Encoded];
+    } else {
+        NSString *base64Encoded = @"";
+        [self.manager publishSaveImageEvent:base64Encoded];
+    }
 }
 
 -(void) onClearButtonPressed {

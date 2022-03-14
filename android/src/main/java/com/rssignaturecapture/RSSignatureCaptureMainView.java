@@ -155,30 +155,38 @@ public class RSSignatureCaptureMainView extends LinearLayout implements OnClickL
     }
 
     try {
+      if (this.signatureView.isEmpty()) {
+          String encoded = "";
+          WritableMap event = Arguments.createMap();
+          event.putString("pathName", file.getAbsolutePath());
+          event.putString("encoded", encoded);
+          ReactContext reactContext = (ReactContext) getContext();
+          reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "topChange", event);
+      } else {
+          Log.d("React Signature", "Save file-======:" + saveFileInExtStorage);
+          // save the signature
+          if (saveFileInExtStorage) {
+            FileOutputStream out = new FileOutputStream(file);
+            this.signatureView.getSignature().compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+          }
 
-      Log.d("React Signature", "Save file-======:" + saveFileInExtStorage);
-      // save the signature
-      if (saveFileInExtStorage) {
-        FileOutputStream out = new FileOutputStream(file);
-        this.signatureView.getSignature().compress(Bitmap.CompressFormat.PNG, 90, out);
-        out.flush();
-        out.close();
+
+          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+          Bitmap resizedBitmap = getResizedBitmap(this.signatureView.getSignature());
+          resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+
+          byte[] byteArray = byteArrayOutputStream.toByteArray();
+          String encoded = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+
+          WritableMap event = Arguments.createMap();
+          event.putString("pathName", file.getAbsolutePath());
+          event.putString("encoded", encoded);
+          ReactContext reactContext = (ReactContext) getContext();
+          reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "topChange", event);
       }
-
-
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      Bitmap resizedBitmap = getResizedBitmap(this.signatureView.getSignature());
-      resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-
-
-      byte[] byteArray = byteArrayOutputStream.toByteArray();
-      String encoded = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-
-      WritableMap event = Arguments.createMap();
-      event.putString("pathName", file.getAbsolutePath());
-      event.putString("encoded", encoded);
-      ReactContext reactContext = (ReactContext) getContext();
-      reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "topChange", event);
     } catch (Exception e) {
       e.printStackTrace();
     }
